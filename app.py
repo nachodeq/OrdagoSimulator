@@ -310,7 +310,7 @@ with top_right:
 # ============================================================
 
 st.markdown('<div class="player-wrap"><div class="player-badge">Tú</div></div>', unsafe_allow_html=True)
-top_cols = st.columns([1, 1, 1, 1, 1, 1])
+top_cols = st.columns(4, gap="small")
 my_cards = [
     render_card_selector(top_cols[1], "Carta 1", "my_1"),
     render_card_selector(top_cols[2], "Carta 2", "my_2"),
@@ -318,10 +318,10 @@ my_cards = [
     render_card_selector(top_cols[4], "Carta 4", "my_4"),
 ]
 
-st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
 st.markdown('<div class="player-wrap"><div class="player-badge">Compañero</div></div>', unsafe_allow_html=True)
-bottom_cols = st.columns([1, 1, 1, 1, 1, 1])
+bottom_cols = st.columns(4, gap="small")
 partner_cards = [
     render_card_selector(bottom_cols[1], "Carta 1", "partner_1"),
     render_card_selector(bottom_cols[2], "Carta 2", "partner_2"),
