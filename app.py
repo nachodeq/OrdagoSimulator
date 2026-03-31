@@ -188,6 +188,7 @@ def load_table(path: str) -> pd.DataFrame:
     )
     return df.set_index("lookup_key")
 
+
 table = load_table(str(TABLE_PATH))
 
 # ============================================================
@@ -197,11 +198,14 @@ table = load_table(str(TABLE_PATH))
 def build_hand(cards: list[str]) -> Hand:
     return Hand.from_string(",".join(cards))
 
+
 def pct(x: float) -> str:
-    return f"{100*x:.2f}%"
+    return f"{100 * x:.2f}%"
+
 
 def partner_pos_of(my_pos: int) -> int:
     return (my_pos + 2) % 4
+
 
 def rank_label(rank: str) -> str:
     if rank == "A":
@@ -213,6 +217,7 @@ def rank_label(rank: str) -> str:
     if rank == "R":
         return "Rey / 3"
     return rank
+
 
 def render_card_selector(col, label: str, key_prefix: str):
     rank = col.selectbox(label, RANKS, key=key_prefix)
@@ -228,6 +233,7 @@ def render_card_selector(col, label: str, key_prefix: str):
         unsafe_allow_html=True,
     )
     return rank
+
 
 def query_table(my_pos: int, my_cards: list[str], partner_cards: list[str]) -> dict:
     partner_pos = partner_pos_of(my_pos)
@@ -306,11 +312,11 @@ with top_right:
     st.markdown("</div>", unsafe_allow_html=True)
 
 # ============================================================
-# CARTAS
+# CARTAS: TÚ ARRIBA
 # ============================================================
 
 st.markdown('<div class="player-wrap"><div class="player-badge">Tú</div></div>', unsafe_allow_html=True)
-top_cols = st.columns(4, gap="small")
+top_cols = st.columns([1, 1, 1, 1, 1, 1])
 my_cards = [
     render_card_selector(top_cols[1], "Carta 1", "my_1"),
     render_card_selector(top_cols[2], "Carta 2", "my_2"),
@@ -318,10 +324,14 @@ my_cards = [
     render_card_selector(top_cols[4], "Carta 4", "my_4"),
 ]
 
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True)
+
+# ============================================================
+# CARTAS: COMPAÑERO ABAJO
+# ============================================================
 
 st.markdown('<div class="player-wrap"><div class="player-badge">Compañero</div></div>', unsafe_allow_html=True)
-bottom_cols = st.columns(4, gap="small")
+bottom_cols = st.columns([1, 1, 1, 1, 1, 1])
 partner_cards = [
     render_card_selector(bottom_cols[1], "Carta 1", "partner_1"),
     render_card_selector(bottom_cols[2], "Carta 2", "partner_2"),
