@@ -151,6 +151,11 @@ st.markdown(
         letter-spacing: 0.03em;
     }
 
+    .button-panel {
+        margin-top: 0.8rem;
+        margin-bottom: 1.2rem;
+    }
+
     div[data-testid="stMetric"] {
         background: rgba(0,0,0,0.20);
         border: 1px solid rgba(255,255,255,0.10);
@@ -200,7 +205,7 @@ def build_hand(cards: list[str]) -> Hand:
 
 
 def pct(x: float) -> str:
-    return f"{100 * x:.2f}%"
+    return f"{100*x:.2f}%"
 
 
 def partner_pos_of(my_pos: int) -> int:
@@ -279,37 +284,26 @@ st.markdown(
 )
 
 # ============================================================
-# SUPERIOR: CONFIG + RESULTADOS
+# CONFIGURACIÓN SUPERIOR
 # ============================================================
 
-top_left, top_right = st.columns([1, 1.6], gap="large")
+st.markdown('<div class="panel">', unsafe_allow_html=True)
+st.markdown('<div class="section-title">Configuración de la mesa</div>', unsafe_allow_html=True)
 
-with top_left:
-    st.markdown('<div class="panel">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">Configuración de la mesa</div>', unsafe_allow_html=True)
+position_label = st.selectbox(
+    "Tu posición",
+    list(POSITION_OPTIONS.keys()),
+    index=0,
+)
+my_pos = POSITION_OPTIONS[position_label]
+partner_pos = partner_pos_of(my_pos)
+partner_label = POSITION_LABELS[partner_pos]
 
-    position_label = st.selectbox(
-        "Tu posición",
-        list(POSITION_OPTIONS.keys()),
-        index=0,
-    )
-    my_pos = POSITION_OPTIONS[position_label]
-    partner_pos = partner_pos_of(my_pos)
-    partner_label = POSITION_LABELS[partner_pos]
-
-    st.markdown(
-        f'<div class="small-note">Posición deducida del compañero: <b>{partner_label}</b></div>',
-        unsafe_allow_html=True,
-    )
-
-    run = st.button("Calcular probabilidades", use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-with top_right:
-    st.markdown('<div class="panel">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">Resultados</div>', unsafe_allow_html=True)
-    result_placeholder = st.empty()
-    st.markdown("</div>", unsafe_allow_html=True)
+st.markdown(
+    f'<div class="small-note">Posición deducida del compañero: <b>{partner_label}</b></div>',
+    unsafe_allow_html=True,
+)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # ============================================================
 # CARTAS: TÚ ARRIBA
@@ -340,44 +334,56 @@ partner_cards = [
 ]
 
 # ============================================================
-# RESULTADOS
+# BOTÓN ABAJO
 # ============================================================
 
-with result_placeholder.container():
-    if run:
-        try:
-            res = query_table(my_pos, my_cards, partner_cards)
+st.markdown('<div class="button-panel">', unsafe_allow_html=True)
+run = st.button("Calcular probabilidades", use_container_width=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
-            st.markdown(
-                f'<div class="small-note"><b>Tus cartas:</b> {res["my_hand_str"]} &nbsp;&nbsp; '
-                f'<b>Cartas del compañero:</b> {res["partner_hand_str"]}</div>',
-                unsafe_allow_html=True,
-            )
+# ============================================================
+# RESULTADOS ABAJO
+# ============================================================
 
-            st.markdown("### Grande / Chica")
-            c1, c2 = st.columns(2)
-            c1.metric("Grande", pct(res["p_grande_win"]))
-            c2.metric("Chica", pct(res["p_chica_win"]))
+st.markdown('<div class="panel">', unsafe_allow_html=True)
+st.markdown('<div class="section-title">Resultados</div>', unsafe_allow_html=True)
 
-            st.markdown("### Pares")
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Llegar a pares", pct(res["p_pares_reached"]))
-            c2.metric("Ganar pares | pares", pct(res["p_pares_win_given_reached"]))
-            c3.metric("Ganar pares", pct(res["p_pares_win"]))
+if run:
+    try:
+        res = query_table(my_pos, my_cards, partner_cards)
 
-            st.markdown("### Juego")
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Llegar a juego", pct(res["p_juego_reached"]))
-            c2.metric("Ganar juego | juego", pct(res["p_juego_win_given_reached"]))
-            c3.metric("Ganar juego", pct(res["p_juego_win"]))
+        st.markdown(
+            f'<div class="small-note"><b>Tus cartas:</b> {res["my_hand_str"]} &nbsp;&nbsp; '
+            f'<b>Cartas del compañero:</b> {res["partner_hand_str"]}</div>',
+            unsafe_allow_html=True,
+        )
 
-            st.markdown("### Punto")
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Llegar a punto", pct(res["p_punto_reached"]))
-            c2.metric("Ganar punto | punto", pct(res["p_punto_win_given_reached"]))
-            c3.metric("Ganar punto", pct(res["p_punto_win"]))
+        st.markdown("### Grande / Chica")
+        c1, c2 = st.columns(2)
+        c1.metric("Grande", pct(res["p_grande_win"]))
+        c2.metric("Chica", pct(res["p_chica_win"]))
 
-        except Exception as e:
-            st.error(str(e))
-    else:
-        st.info("Selecciona posición y cartas, y pulsa el botón para consultar.")
+        st.markdown("### Pares")
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Llegar a pares", pct(res["p_pares_reached"]))
+        c2.metric("Ganar pares | pares", pct(res["p_pares_win_given_reached"]))
+        c3.metric("Ganar pares", pct(res["p_pares_win"]))
+
+        st.markdown("### Juego")
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Llegar a juego", pct(res["p_juego_reached"]))
+        c2.metric("Ganar juego | juego", pct(res["p_juego_win_given_reached"]))
+        c3.metric("Ganar juego", pct(res["p_juego_win"]))
+
+        st.markdown("### Punto")
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Llegar a punto", pct(res["p_punto_reached"]))
+        c2.metric("Ganar punto | punto", pct(res["p_punto_win_given_reached"]))
+        c3.metric("Ganar punto", pct(res["p_punto_win"]))
+
+    except Exception as e:
+        st.error(str(e))
+else:
+    st.info("Selecciona posición y cartas, y pulsa el botón para consultar.")
+
+st.markdown("</div>", unsafe_allow_html=True)
