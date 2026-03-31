@@ -141,7 +141,7 @@ export default function App() {
         <header className="hero">
           <div>
             <div className="eyebrow">OrdagoSimulator</div>
-            <h1>Tapete de consulta exacta</h1>
+            <h1>Calculador de probabilidades a cartas dadas</h1>
             <p>
               Selecciona tu posición y las ocho cartas conocidas de la pareja.
               La web consulta la tabla maestra exacta y devuelve probabilidades
@@ -161,7 +161,7 @@ export default function App() {
 
         <section className="table-layout">
           <aside className="side-panel">
-            <div className="side-title">Selección mano</div>
+            <div className="side-title">Selecciona tu posición</div>
             <div className="side-pos">{myPosNum}</div>
             <div className="side-partner">Compañero: {partner}</div>
 
